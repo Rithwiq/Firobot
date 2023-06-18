@@ -1,0 +1,32 @@
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+RF24 radio(9, 10); // CE, CSN pins
+const byte address[6] = "00001"; // Address of the receiver module
+
+void setup() {
+  Serial.begin(9600);
+  radio.begin();
+  radio.openWritingPipe(address);
+  radio.setPALevel(RF24_PA_LOW); // Set power level, you can change it to RF24_PA_HIGH if needed
+}
+
+void loop() {
+  float sensorData = readSensor(); // Function to read sensor data
+  
+  Serial.print("Sending sensor data: ");
+  Serial.println(sensorData);
+  
+  radio.write(&sensorData, sizeof(sensorData));
+  
+  delay(1000); // Delay between transmissions
+}
+
+float readSensor() {
+  // Code to read the sensor and retrieve the data
+  // Replace this with your actual sensor reading code
+  float sensorValue = analogRead(A0); // Example: Reading from analog pin A0
+  
+  return sensorValue;
+}
