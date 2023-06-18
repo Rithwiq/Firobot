@@ -1,0 +1,28 @@
+//Sample code for receiving sensor data through RF
+
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+RF24 radio(9, 10); // CE, CSN pins
+const byte address[6] = "00001"; // Address of the receiver module
+
+void setup() {
+  Serial.begin(9600);
+  radio.begin();
+  radio.openReadingPipe(1, address);
+  radio.setPALevel(RF24_PA_LOW); // Set power level, you can change it to RF24_PA_HIGH if needed
+  radio.startListening();
+}
+
+void loop() {
+  if (radio.available()) {
+    float sensorData;
+    radio.read(&sensorData, sizeof(sensorData));
+    Serial.print("Received sensor data: ");
+    Serial.println(sensorData);
+
+    // Process the received sensor data here
+    
+  }
+}
